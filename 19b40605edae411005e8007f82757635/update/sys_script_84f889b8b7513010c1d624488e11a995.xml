@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>false</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>ml_solution</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition table="ml_solution">stateINsolution_error,solution_complete,solution_cancelled,timed_out,unauthorized^solution_nameLIKEdocintel^stateVALCHANGES^EQ<item display_value="solution_error,solution_complete,solution_cancelled,timed_out,unauthorized" endquery="false" field="state" goto="false" newquery="false" operator="IN" or="false" value="solution_error,solution_complete,solution_cancelled,timed_out,unauthorized"/>
+            <item endquery="false" field="solution_name" goto="false" newquery="false" operator="LIKE" or="false" value="docintel"/>
+            <item endquery="false" field="state" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>DocIntel ML solutions update</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/ ) {
+    var solutionName = current.getValue("solution_name");
+
+    if (solutionName.includes("docintel_ocr_workflow")) {
+        gs.include("DocIntelProcessOcrResult");
+        var ocrProcessor = new sn_docintel.DocIntelProcessOcrResult();
+        ocrProcessor.process(current);
+    } else if (solutionName.includes("docintel_prediction_workflow")) {
+        gs.include("DocIntelProcessPredictionResult");
+        var predictionProcessor = new sn_docintel.DocIntelProcessPredictionResult();
+        predictionProcessor.process(current);
+    } else if (solutionName.includes("docintel_training_workflow")) {
+        gs.include("DocIntelProcessTrainingResult");
+        var trainingProcessor = new sn_docintel.DocIntelProcessTrainingResult();
+        trainingProcessor.process(current);
+    } else if (solutionName.includes("docintel_pdf_preprocessing_workflow")) {
+        gs.include("DocIntelProcessPdfResult");
+        var pdfProcessor = new sn_docintel.DocIntelProcessPdfResult();
+        pdfProcessor.process(current);
+    } else {
+        // This would be weird since the condition on the business rule
+        // checks if the solution name contains "docintel"
+        gs.error("Unknown 'docintel' ML solution: " + solutionName);
+    }
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-07-09 16:10:11</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>84f889b8b7513010c1d624488e11a995</sys_id>
+        <sys_mod_count>45</sys_mod_count>
+        <sys_name>DocIntel ML solutions update</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Document Intelligence" source="sn_docintel">19b40605edae411005e8007f82757635</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Document Intelligence">19b40605edae411005e8007f82757635</sys_scope>
+        <sys_update_name>sys_script_84f889b8b7513010c1d624488e11a995</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-04-29 16:00:03</sys_updated_on>
+        <template/>
+        <when>after</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=84f889b8b7513010c1d624488e11a995"/>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="Document Intelligence">19b40605edae411005e8007f82757635</claim_owner_scope>
+        <claim_timestamp>19a3b7f4e440000001</claim_timestamp>
+        <metadata_update_name>sys_script_84f889b8b7513010c1d624488e11a995</metadata_update_name>
+        <previous_claim_app_version>7.1.5</previous_claim_app_version>
+        <previous_claim_name>Document Intelligence</previous_claim_name>
+        <previous_claim_scope>19b40605edae411005e8007f82757635</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-10-31 18:19:50</sys_created_on>
+        <sys_id>9ee728f7eb7cb2903716f3c3dad0cd26</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-10-31 18:19:50</sys_updated_on>
+    </sys_claim>
+</record_update>
